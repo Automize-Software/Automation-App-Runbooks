@@ -1,0 +1,16 @@
+{
+    "Catagories" : [
+        {
+            "Name" : "Microsoft Active Directory",
+            "Runbooks" : [
+                {
+                    "Name" : "Create User",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/Create-User.ps1"
+                }
+            ]
+        }
+
+    ]
+}
