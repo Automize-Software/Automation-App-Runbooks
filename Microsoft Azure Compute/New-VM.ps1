@@ -25,6 +25,18 @@ param (
 )
 
 try {
+    if (Get-Module -ListAvailable -Name "Az.Compute") {
+        Write-Verbose "Found Az.Compute module"
+    } else {
+        throw "Could not find Az.Compute module. Please install this module"
+    }
+
+    if (Get-Module -ListAvailable -Name "Az.Network") {
+        Write-Verbose "Found Az.Network module"
+    } else {
+        throw "Could not find Az.Network module. Please install this module"
+    }
+
     $connectionName = "AzureRunAsConnection"
     $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName 
 
