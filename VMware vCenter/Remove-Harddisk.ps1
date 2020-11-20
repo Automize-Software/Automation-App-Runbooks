@@ -4,7 +4,10 @@ param (
         [string] $VMName = "MyVM",
         
     [Parameter(Mandatory=$true)]
-        [string] $VCenterServerName
+        [string] $VCenterServerName,
+
+    [Parameter(Mandatory=$true)]
+        [string] $DiskId
   )
   
 # * Environment variabels * #
@@ -30,8 +33,8 @@ try {
     Connect-VIServer -Server $VCenterServerName -Credential $credentials > $null
 
     $vm = Get-VM -Name $VMName
-    
-    Remove-VM -VM $vm -Confirm:$false -DeletePermanently
+
+    $vm | Get-HardDisk | Where-Object {$_.id -eq $DiskId} | Remove-HardDisk -DeletePermanently -Confirm:$false
 
     Disconnect-VIServer -Confirm:$false
 } catch {

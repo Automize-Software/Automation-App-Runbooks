@@ -9,7 +9,7 @@ param (
   
 # * Environment variabels * #
 # Set the below to match your environment #
-$credentials = "" #Name of stored credentials to use for authentication with VMware vCenter
+$credentialsName = "" #Name of stored credentials to use for authentication with VMware vCenter
 
 
 ### Script ###
@@ -17,6 +17,8 @@ try {
     $metadata = @{
         startTime = Get-Date
     }
+
+    $credentials = Get-AutomationPSCredential -Name $credentialsName
 
     $psSnapIn = "VMware.VimAutomation.Core"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12

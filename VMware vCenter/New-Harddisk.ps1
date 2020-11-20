@@ -4,7 +4,10 @@ param (
         [string] $VMName = "MyVM",
         
     [Parameter(Mandatory=$true)]
-        [string] $VCenterServerName
+        [string] $VCenterServerName,
+
+    [Parameter(Mandatory=$true)]
+        [string] $DiskSizeGB
   )
   
 # * Environment variabels * #
@@ -30,8 +33,8 @@ try {
     Connect-VIServer -Server $VCenterServerName -Credential $credentials > $null
 
     $vm = Get-VM -Name $VMName
-    
-    Remove-VM -VM $vm -Confirm:$false -DeletePermanently
+
+    $vm | New-HardDisk -CapacityGB $DiskSizeGB -Persistence persistent
 
     Disconnect-VIServer -Confirm:$false
 } catch {
