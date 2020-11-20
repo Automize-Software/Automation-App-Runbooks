@@ -46,6 +46,42 @@
                 }
             ]
         }
+        ,
+        {
+            "Name" : "VMware vCenter",
+            "Runbooks" : [
+                {
+                    "Name" : "New VM",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/VMware%20vCenter/New-VM.ps1"
+                },
+                {
+                    "Name" : "Remove VM",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/VMware%20vCenter/Remove-VM.ps1"
+                },
+                {
+                    "Name" : "Restart VM",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/VMware%20vCenter/Restart-VM.ps1"
+                },
+                {
+                    "Name" : "Start VM",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/VMware%20vCenter/Start-VM.ps1"
+                },
+                {
+                    "Name" : "Stop VM",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/VMware%20vCenter/Stop-VM.ps1"
+                }
+            ]
+        }
 
     ]
 }

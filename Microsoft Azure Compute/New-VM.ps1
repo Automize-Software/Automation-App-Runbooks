@@ -48,6 +48,8 @@ try {
         -ApplicationId $servicePrincipalConnection.ApplicationId `
         -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint
 
+    Write-Verbose $connectionResult
+
     Write-Verbose "Login successful.."
 
     $VMLocalAdminSecurePassword = ConvertTo-SecureString $VMLocalAdminPassword -AsPlainText -Force

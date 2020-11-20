@@ -24,6 +24,8 @@ try {
         -ApplicationId $servicePrincipalConnection.ApplicationId `
         -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint
 
+    Write-Verbose $connectionResult
+
     Write-Verbose "Login successful.."
 
     Restart-AzVM -Name $serverName -ResourceGroupName $resourceGroupName

@@ -12,7 +12,7 @@ try {
     } else {
         throw "Could not find Az.Compute module. Please install this module"
     }
-    
+
     $connectionName = "AzureRunAsConnection"
     $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName 
 
@@ -24,6 +24,8 @@ try {
         -ApplicationId $servicePrincipalConnection.ApplicationId `
         -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint
 
+    Write-Verbose $connectionResult
+    
     Write-Verbose "Login successful.."
 
     Stop-AzVM -Name $serverName -ResourceGroupName $resourceGroupName
