@@ -4,10 +4,64 @@
             "Name" : "Microsoft Active Directory",
             "Runbooks" : [
                 {
-                    "Name" : "Create User",
+                    "Name" : "Disable User",
                     "RunbookType" : "PowerShell",
                     "Description" : "",
-                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/Create-User.ps1"
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/Disable-User.ps1"
+                },
+                {
+                    "Name" : "Enable User",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/Enable-User.ps1"
+                },
+                {
+                    "Name" : "New Group Member",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/New-Group-Member.ps1"
+                },
+                {
+                    "Name" : "New Group",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/New-Group.ps1"
+                },
+                {
+                    "Name" : "New User",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/New-User.ps1"
+                },
+                {
+                    "Name" : "Remove Group Member",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/Remove-Group-Member.ps1"
+                },
+                {
+                    "Name" : "Remove Group",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/Remove-Group.ps1"
+                },
+                {
+                    "Name" : "Remove User",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/Remove-User.ps1"
+                },
+                {
+                    "Name" : "Set User Password",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/Set-User-Password.ps1"
+                },
+                {
+                    "Name" : "Unlock User",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/Unlock-User.ps1"
                 }
             ]
         },

@@ -60,11 +60,16 @@ try {
   	-MobilePhone $mobilePhone `
   	-OfficePhone $officePhone `
     -AccountPassword $userPassword `
-    -Enabled:$True
+	-Enabled:$True `
+	-Server $domainController `
+	-Credential $credentials `
+	-PassThru $true
+
 } catch {
   Write-Error ("Exception caught at line $($_.InvocationInfo.ScriptLineNumber), $($_.Exception.Message)") -Verbose
   throw
 } finally {
   Write-Verbose "Runbook has completed. Total runtime $((([DateTime]::Now) - $($metadata.startTime)).TotalSeconds) Seconds" -Verbose
-  Write-Output $out | ConvertTo-Json
+  Write-Output $metadata | ConvertTo-Json
+  Write-Output $user | ConvertTo-Json
 }
