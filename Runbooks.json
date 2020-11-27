@@ -4,7 +4,7 @@
             "Name" : "Microsoft Active Directory",
             "Runbooks" : [
                 {
-                    "Name" : "Disable User 2",
+                    "Name" : "Disable User",
                     "RunbookType" : "PowerShell",
                     "Description" : "",
                     "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Active%20Directory/Disable-User.ps1"
