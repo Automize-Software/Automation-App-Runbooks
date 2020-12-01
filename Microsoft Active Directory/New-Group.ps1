@@ -31,6 +31,13 @@ try {
   
   Write-Verbose "Runbook started - $($metadata.startTime)"
 
+  if (Get-Module -ListAvailable -Name "ActiveDirectory") {
+    Write-Verbose "Found ActiveDirectory module"
+  } else {
+    Write-Verbose "Did not find Active Directory module. Trying to install the RSAT-AD-PowerShell Windows Feature"
+    Install-WindowsFeature RSAT-AD-PowerShell
+  }
+
   if($name -eq $null) {
     $name = $samAccountName
   }
