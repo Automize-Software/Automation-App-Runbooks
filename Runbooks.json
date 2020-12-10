@@ -1,6 +1,41 @@
 {
     "Categories" : [
         {
+            "Name" : "ASG Remote Desktop",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Atlassian Jira Software",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Cisco ASA Firewall",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Cisco Unified Computing System",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Crypton Easy-IP",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "F5 Web Application Firewall",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Fortinet FortiGate",
+            "Runbooks" : [
+            ]
+        },
+        {
             "Name" : "Microsoft Active Directory",
             "Runbooks" : [
                 {
@@ -99,8 +134,63 @@
                     "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Compute/Stop-VM.ps1"
                 }
             ]
-        }
-        ,
+        },
+        {
+            "Name" : "Microsoft Configuration Manager",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Microsoft Exchange Online",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Microsoft Hyper-V",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Microsoft Intune",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Microsoft Operations Manager",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Microsoft Sharepoint Online",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Microsoft Teams",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Palo Alto Firewall",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "pfSense",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "Redmine",
+            "Runbooks" : [
+            ]
+        },
+        {
+            "Name" : "SAP SuccessFactors",
+            "Note" : "https://api.sap.com/package/SuccessFactorsEmployeeCentral?section=Artifacts - Start med Employment Information / Personal Information",
+            "Runbooks" : [
+            ]
+        },
         {
             "Name" : "VMware vCenter",
             "Runbooks" : [
@@ -134,6 +224,11 @@
                     "Description" : "",
                     "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/VMware%20vCenter/Stop-VM.ps1"
                 }
+            ]
+        },
+        {
+            "Name" : "VMWare vRealize",
+            "Runbooks" : [
             ]
         }
 
