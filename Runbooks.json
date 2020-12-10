@@ -11,11 +11,6 @@
             ]
         },
         {
-            "Name" : "Cisco ASA Firewall",
-            "Runbooks" : [
-            ]
-        },
-        {
             "Name" : "Cisco Unified Computing System",
             "Runbooks" : [
             ]
