@@ -1,9 +1,9 @@
 param (
     [Parameter(Mandatory=$true)]
-		[string] $summaryText,
+    [string] $summaryText,
 		
     [Parameter(Mandatory=$true)]
-        [string] $descriptionText
+    [string] $descriptionText
 )
 
 # * Environment variabels * #
