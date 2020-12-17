@@ -9,6 +9,12 @@
             "Name" : "Atlassian Jira Software",
             "Runbooks" : [
                 {
+                    "Name" : "New Issue Comment",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Atlassian%20Jira%20Software/New-Issue-Comment.ps1"
+                },
+                {
                     "Name" : "New Issue",
                     "RunbookType" : "PowerShell",
                     "Description" : "",
