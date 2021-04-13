@@ -33,6 +33,29 @@
             ]
         },
         {
+            "Name" : "DocuSign",
+            "Runbooks" : [
+                {
+                    "Name" : "Get Envelope",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/DocuSign/Get-Envelope.ps1"
+                },
+                {
+                    "Name" : "Get Envelope Documents",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/DocuSign/Get-Envelope-Documents.ps1"
+                },
+                {
+                    "Name" : "New Envelope",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/DocuSign/New-Envelope.ps1"
+                }
+            ]
+        },
+        {
             "Name" : "F5 Web Application Firewall",
             "Runbooks" : [
             ]
