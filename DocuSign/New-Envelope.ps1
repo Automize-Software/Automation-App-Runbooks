@@ -20,6 +20,8 @@ $ccName = "" #Name of entity sending this request. This is the person that the s
 $ccEmail = "" #Email of entity sending this request. This is the person that the signer can reply to. Ex. sales@automize-software.com
 $authority = "account-d.docusign.com"
 $apiUri = "https://demo.docusign.net/restapi"
+$filename = "Terms and conditions" #Name of the document that should be signed. Ex: Terms and conditions
+$fileExtension  = "docx" #Name of the file extension. Ex: docx
 
 #Script
 try {
@@ -170,8 +172,8 @@ try {
         documents    = @(
             @{
                 documentBase64 = "$(Get-Content $docBase64)";
-                name           = "Terms and conditions";
-                fileExtension  = "docx";
+                name           = $filename;
+                fileExtension  = $fileExtension;
                 documentId     = "1";
             }; );
         recipients   = @{
