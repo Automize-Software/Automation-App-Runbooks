@@ -104,8 +104,6 @@ try {
     $rsa.Dispose()
     Remove-Item -Path $privateKeyPath -Force > $null
 
-
-    $authorizationEndpoint = "https://account-d.docusign.com/oauth/"
     $tokenResponse = Invoke-RestMethod `
         -Uri "$authorizationEndpoint/token" `
         -Method "POST" `
@@ -122,7 +120,7 @@ try {
     Write-Verbose "AccountId: $accountId"
 }
 catch {
-    Write-Output "Make sure to authenticate this app using the following URI: $authorizationURL"
+    Write-Output "Make sure to authenticate this app using the following URI: $authorizationEndpoint$authorizationURL"
     Write-Error $_.Exception.Message
     Throw "Error: Could not authenticate with DocuSign"
 }
