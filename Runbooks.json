@@ -210,13 +210,13 @@
                     "Name" : "Import DEP Devices",
                     "RunbookType" : "PowerShell",
                     "Description" : "",
-                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Intune%20/Import-DEP-Devices.ps1"
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Intune/Import-DEP-Devices.ps1"
                 },
                 {
                     "Name" : "Import Managed Devices",
                     "RunbookType" : "PowerShell",
                     "Description" : "",
-                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Intune%20/Import-Managed-Devices.ps1"
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Intune/Import-Managed-Devices.ps1"
                 }
             ]
         },
