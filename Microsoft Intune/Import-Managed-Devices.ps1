@@ -93,12 +93,12 @@ try {
           try{
             $DeviceID = $Device.id
             $uri = "https://graph.microsoft.com/$version/deviceManagement/managedDevices/$DeviceID`?`$select=hardwareinformation,iccid,udid"
+            $DeviceInfo = (Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -Verbose)
           } catch {
             Write-Warning "Could not get device data for device id: $DeviceID"
             continue
           }
           try{
-            $DeviceInfo = (Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -Verbose)
             $DeviceNoHardware = $Device | select * -ExcludeProperty hardwareInformation,deviceActionResults,userId,imei,manufacturer,model,isSupervised,isEncrypted,serialNumber,meid,subscriberCarrier,iccid,udid
             $HardwareExcludes = $DeviceInfo.hardwareInformation | select * -ExcludeProperty sharedDeviceCachedUsers,phoneNumber
             $OtherDeviceInfo = $DeviceInfo | select iccid,udid
