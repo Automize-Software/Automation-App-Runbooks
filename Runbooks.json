@@ -226,6 +226,17 @@
             ]
         },
         {
+            "Name" : "Microsoft Orchestrator",
+            "Runbooks" : [
+                {
+                    "Name" : "New Job",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Orchestrator/New-Job.ps1"
+                }
+            ]
+        },
+        {
             "Name" : "Microsoft Sharepoint Online",
             "Runbooks" : [
             ]
