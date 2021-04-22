@@ -90,12 +90,18 @@ try {
 
     foreach($Device in $Devices) {
         if([string]$Device.managementAgent -ne "configurationManagerClientMdm"){
+          try{
             $DeviceID = $Device.id
             $uri = "https://graph.microsoft.com/$version/deviceManagement/managedDevices/$DeviceID`?`$select=hardwareinformation,iccid,udid"
+          } catch {
+            Write-Warning "Could not get device data for device id: $DeviceID"
+            continue
+          }
+          try{
             $DeviceInfo = (Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -Verbose)
-            $DeviceNoHardware = $Device | Select-Object * -ExcludeProperty hardwareInformation,deviceActionResults,userId,imei,manufacturer,model,isSupervised,isEncrypted,serialNumber,meid,subscriberCarrier,iccid,udid
-            $HardwareExcludes = $DeviceInfo.hardwareInformation | Select-Object * -ExcludeProperty sharedDeviceCachedUsers,phoneNumber
-            $OtherDeviceInfo = $DeviceInfo | Select-Object iccid,udid
+            $DeviceNoHardware = $Device | select * -ExcludeProperty hardwareInformation,deviceActionResults,userId,imei,manufacturer,model,isSupervised,isEncrypted,serialNumber,meid,subscriberCarrier,iccid,udid
+            $HardwareExcludes = $DeviceInfo.hardwareInformation | select * -ExcludeProperty sharedDeviceCachedUsers,phoneNumber
+            $OtherDeviceInfo = $DeviceInfo | select iccid,udid
             $Object = New-Object System.Object
                 foreach($Property in $DeviceNoHardware.psobject.Properties){
                     $Object | Add-Member -MemberType NoteProperty -Name $Property.Name -Value $Property.Value
@@ -110,9 +116,18 @@ try {
             $json = $Object | ConvertTo-Json
             $body = [regex]::Replace($json,'(?<=")(\w+)(?=":)',{$args[0].Groups[1].Value.ToLower()})
             $body = [System.Text.Encoding]::UTF8.GetBytes($body)
+          } catch {
+            Write-Warning "Could not parse device data for device id: $DeviceID"
+            continue
+          }
+          try{
             $response = Invoke-RestMethod -Headers $ServiceNowHeaders -Method 'post' -Uri $ServiceNowURI -Body $body
             $output = $response.RawContent
             Write-Verbose "ServiceNow output: $output"
+          } catch {
+            Write-Warning "Could not upload device data for device id: $DeviceID"
+            continue
+          }
         }
     }
 }
