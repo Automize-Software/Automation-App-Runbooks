@@ -199,6 +199,23 @@
             ]
         },
         {
+            "Name" : "Microsoft Exchange Server",
+            "Runbooks" : [
+                {
+                    "Name" : "New User Mailbox",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Exchange%20Server/New-User-Mailbox.ps1"
+                },
+                {
+                    "Name" : "Remove User Mailbox",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Exchange%20Server/Remove-User-Mailbox.ps1"
+                }
+            ]
+        },
+        {
             "Name" : "Microsoft Hyper-V",
             "Runbooks" : [
             ]

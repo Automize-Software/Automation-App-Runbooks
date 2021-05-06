@@ -96,7 +96,7 @@ try {
     
     foreach($Device in $Devices) {
       $json = $Device | ConvertTo-Json
-      $body = [regex]::Replace($json,'(?<=")(\w+)(?=":)',{$args[0].Groups[1].Value.ToLower()})
+      $body = [regex]::Replace($json,'(?<=")(.*?)(?=":)',{$args[0].Groups[1].Value.ToLower().replace(' ','_')})
       $body = [System.Text.Encoding]::UTF8.GetBytes($body)
       $response = Invoke-RestMethod -Headers $ServiceNowHeaders -Method 'post' -Uri $ServiceNowURI -Body $body
       $output = $response.RawContent

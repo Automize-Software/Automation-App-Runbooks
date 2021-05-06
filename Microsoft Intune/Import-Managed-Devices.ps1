@@ -99,9 +99,9 @@ try {
             continue
           }
           try{
-            $DeviceNoHardware = $Device | select * -ExcludeProperty hardwareInformation,deviceActionResults,userId,imei,manufacturer,model,isSupervised,isEncrypted,serialNumber,meid,subscriberCarrier,iccid,udid
-            $HardwareExcludes = $DeviceInfo.hardwareInformation | select * -ExcludeProperty sharedDeviceCachedUsers,phoneNumber
-            $OtherDeviceInfo = $DeviceInfo | select iccid,udid
+            $DeviceNoHardware = $Device | Select-Object * -ExcludeProperty hardwareInformation,deviceActionResults,userId,imei,manufacturer,model,isSupervised,isEncrypted,serialNumber,meid,subscriberCarrier,iccid,udid
+            $HardwareExcludes = $DeviceInfo.hardwareInformation | Select-Object * -ExcludeProperty sharedDeviceCachedUsers,phoneNumber
+            $OtherDeviceInfo = $DeviceInfo | Select-Object iccid,udid
             $Object = New-Object System.Object
                 foreach($Property in $DeviceNoHardware.psobject.Properties){
                     $Object | Add-Member -MemberType NoteProperty -Name $Property.Name -Value $Property.Value
@@ -114,7 +114,7 @@ try {
                 }
                 
             $json = $Object | ConvertTo-Json
-            $body = [regex]::Replace($json,'(?<=")(\w+)(?=":)',{$args[0].Groups[1].Value.ToLower()})
+            $body = [regex]::Replace($json,'(?<=")(.*?)(?=":)',{$args[0].Groups[1].Value.ToLower().replace(' ','_')})
             $body = [System.Text.Encoding]::UTF8.GetBytes($body)
           } catch {
             Write-Warning "Could not parse device data for device id: $DeviceID"
