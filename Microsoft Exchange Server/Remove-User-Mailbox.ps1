@@ -13,7 +13,7 @@ $exchangeServerName = Get-AutomationVariable -Name $exchangeServerVarName
 $session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://$exchangeServerName/powershell -Credential $cred 
 
 Write-Debug "Import Exchange remote session"
-$importsession = Import-PSSession $session -AllowClobber
+Import-PSSession $session -AllowClobber > $null
 
 $ErrorActionPreference = "Stop"
 $ADUser = Get-ADUser -Properties "msExchMailboxGuid" -Filter "sAMAccountName -eq '$username'" -ErrorAction SilentlyContinue
