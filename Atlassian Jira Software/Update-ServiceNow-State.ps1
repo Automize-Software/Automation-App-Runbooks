@@ -29,7 +29,7 @@ try{
     $ServiceNowHeaders.Add('Content-Type','application/json')
 
     $issueID = $jiraIssue.id
-    $ServiceNowURI = "https://$ServiceNowInstanceName.service-now.com/api/now/table/${ServiceNowTable}?sysparm_query=correlation_id%3D$issueID&sysparm_fields=sys_id,state&sysparm_limit=1"
+    $ServiceNowURI = "https://$ServiceNowInstanceName.service-now.com/api/now/table/$($ServiceNowTable)?sysparm_query=correlation_id%3D$issueID&sysparm_fields=sys_id,state&sysparm_limit=1"
     Write-Verbose "ServiceNow URI: $ServiceNowURI"
 
     $response = Invoke-RestMethod -Method "GET" -Uri $ServiceNowURI -Headers $ServiceNowHeaders
