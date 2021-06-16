@@ -22,11 +22,11 @@ try{
         Import-Module (Join-Path $(split-path $Env:SMS_ADMIN_UI_PATH) ConfigurationManager.psd1)
                 
         #If the PS drive doesn't exist then try to create it.
-        If (! (Test-Path "$($Using:SiteCode):")) {
-            Try{
+        if (! (Test-Path "$($Using:SiteCode):")) {
+            try{
                 New-PSDrive -Name $Using:SiteCode -PSProvider CMSite -Root "." -WhatIf:$False | Out-Null
-            } Catch {
-                Return
+            } catch {
+                return
             }
         }
 
