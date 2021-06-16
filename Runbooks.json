@@ -189,8 +189,20 @@
             ]
         },
         {
-            "Name" : "Microsoft Configuration Manager",
+            "Name" : "Microsoft Endpoint Manager",
             "Runbooks" : [
+                {
+                    "Name" : "New Direct Device Membership",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Endpoint%20Manager/New-Direct-Device-Membership.ps1"
+                },
+                {
+                    "Name" : "Remove Direct Device Membership",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Endpoint%20Manager/Remove-Direct-Device-Membership.ps1"
+                }
             ]
         },
         {
