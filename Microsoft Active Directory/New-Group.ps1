@@ -18,11 +18,12 @@ $domain = "" #Name of the domain to add the user to
 $domainController = "" #IP or FQDN of Domain Controller
 $groupScope = "Universal" #Set the scope of the group to be created
 $path = "" #Path to create group in. Eg. CN=Groups,DC=YourDomain,DC=Internal
-$credentials = "" #Name of stored credentials to use for authentication with Domain Controller
+$credentialName = "" #Name of stored credentials to use for authentication with Domain Controller
 
 
 ### Script ###
 try {
+  $cred = Get-AutomationPSCredential -Name $CredentialName
   $metadata = @{
     startTime = Get-Date
     samAccountName = $samAccountName
@@ -53,8 +54,8 @@ try {
     -Path $path `
     -GroupScope $groupScope `
 	  -Server $domainController `
-    -Credential $credentials `
-    -PassThru $true
+    -Credential $cred `
+    -PassThru
 
 } catch {
   Write-Error ("Exception caught at line $($_.InvocationInfo.ScriptLineNumber), $($_.Exception.Message)")

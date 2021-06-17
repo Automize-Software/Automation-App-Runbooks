@@ -42,7 +42,7 @@ try {
     throw "The group does not exist or was not found"   
   }
   
-  $members = Add-ADGroupMember -Credential $credentials -Identity $group -Members $user -Server $domainController -Confirm $false -PassThru $true
+  $members = Remove-ADGroupMember -Credential $credentials -Identity $group -Members $user -Server $domainController -Confirm $false -PassThru
 
 } catch {
   Write-Error ("Exception caught at line $($_.InvocationInfo.ScriptLineNumber), $($_.Exception.Message)")

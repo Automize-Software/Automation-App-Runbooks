@@ -34,7 +34,7 @@ try {
       throw "The user does not exists"   
   }
   
-  $user = Enable-ADAccount -Credential $credentials -Identity $user -Server $domainController -PassThru $true
+  $user = Enable-ADAccount -Credential $credentials -Identity $user -Server $domainController -PassThru
 
 } catch {
   Write-Error ("Exception caught at line $($_.InvocationInfo.ScriptLineNumber), $($_.Exception.Message)")

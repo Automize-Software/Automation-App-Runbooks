@@ -70,7 +70,7 @@ try {
 	-Enabled:$True `
 	-Server $domainController `
 	-Credential $credentials `
-	-PassThru $true
+	-PassThru
 
 } catch {
   Write-Error ("Exception caught at line $($_.InvocationInfo.ScriptLineNumber), $($_.Exception.Message)") -Verbose

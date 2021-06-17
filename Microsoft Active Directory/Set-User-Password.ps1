@@ -11,7 +11,6 @@ param (
 # Set the below to match your environment #
 $domain = "" #Name of the domain to add the user to
 $domainController = "" #IP or FQDN of Domain Controller
-$path = "" #Path to create the user in. Eg. CN=Users,DC=YourDomain,DC=Internal
 $credentialsName = "" #Name of stored credentials to use for authentication with Domain Controller
 
 ### Script ###
