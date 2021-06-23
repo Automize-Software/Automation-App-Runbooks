@@ -8,7 +8,6 @@ param (
 
 # * Environment variabels * #
 # Set the below to match your environment #
-$reporterName = "" #Name of the user that should be set as the reporter on the issue in Jira
 $projectKey = "" #Key of the project to which the issue should be added. Ex: AA
 $issueTypeId = "" #Id of the issue type. Ex: 10004
 $apiURL = "" #API endpoint. Ex: https://automize.atlassian.net/rest/api/3
@@ -29,9 +28,6 @@ try{
     }
     $project = @{
         'key' = $projectKey
-    }
-    $reporter = @{
-        'name' = $reporterName
     }
     $issuetype = @{
         'id' = $issueTypeId
@@ -57,15 +53,30 @@ try{
         'summary' = $summaryText
         'description' = $description
         'issuetype' = $issuetype
-        'reporter' = $reporter
     }
     $json = $jiraInput | ConvertTo-Json -Depth 6
     $json = $json -replace '[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g', ''
     $jsonEncoded = [System.Text.Encoding]::UTF8.GetBytes($json)
-    $issue = Invoke-RestMethod -Method "POST" -Uri $url -Headers $Headers -Body $jsonEncoded | ConvertTo-Json
+    $issue = Invoke-WebRequest -Method "POST" -Uri $url -Headers $Headers -Body $jsonEncoded -UseBasicParsing
 } catch {
+    Write-Output $issue;
     Write-Error -Message $_.Exception
+    try {
+      if ($PSVersionTable.PSVersion.Major -lt 6) {
+        if ($Error.Exception.Response) {  
+          $Reader = New-Object System.IO.StreamReader($Error.Exception.Response.GetResponseStream())
+          $Reader.BaseStream.Position = 0
+          $Reader.DiscardBufferedData()
+          $ResponseBody = $Reader.ReadToEnd()
+          Write-Output $ResponseBody
+        }
+      } else  {
+        Write-Output $Error.ErrorDetails.Message
+      }
+    } catch {
+      Write-Output "Could not parse output from $url"
+    }
     throw $_.Exception
 } finally {
-    Write-Output $issue
+    Write-Output $issue.Content
 }
