@@ -29,7 +29,7 @@ param (
 $domain = "" #Name of the domain to add the user to
 $domainController = "" #IP or FQDN of Domain Controller
 $path = "" #Path to create the user in. Eg. CN=Users,DC=YourDomain,DC=Internal
-$credentials = "" #Name of stored credentials to use for authentication with Domain Controller
+$credentialsName = "" #Name of stored credentials to use for authentication with Domain Controller
 
 
 ### Script ###
@@ -49,6 +49,7 @@ try {
     Install-WindowsFeature RSAT-AD-PowerShell
   }
   
+  $credentials = Get-AutomationPSCredential -Name $credentialsName
   $displayname = $firstname + " " + $lastname
   $samAccountName = $username
   $userPrincipalName = $username + "@" + $domain
