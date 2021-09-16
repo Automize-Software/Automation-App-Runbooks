@@ -9,7 +9,7 @@ param (
     [string] $filename
 )
 
-# * Environment variabels * #
+# * Environment variabels * # 
 # Set the below to match your environment #
 $apiURL = "" #API endpoint. Ex: https://automize.atlassian.net/rest/api/3/
 $credName = "" #Name of API Token login credetinals to authenticate with Jira. Ex: Jira-Admin
