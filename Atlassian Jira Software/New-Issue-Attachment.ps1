@@ -12,9 +12,9 @@ param (
 # * Environment variabels * #
 # Set the below to match your environment #
 $apiURL = "" #API endpoint. Ex: https://automize.atlassian.net/rest/api/3/
-$credName = "" #Name of API Token login credetinals. Ex: Jira-Admin
+$credName = "" #Name of API Token login credetinals to authenticate with Jira. Ex: Jira-Admin
 $ServiceNowInstanceName = "" #Name of the ServiceNow instance that instance should be imported to
-$serviceNowCredentialName = "" #Name of Credentials to authenticate with ServiceNow with
+$serviceNowCredentialName = "" #Name of Credentials to authenticate with ServiceNow
 
 ### Script ###
 try{
