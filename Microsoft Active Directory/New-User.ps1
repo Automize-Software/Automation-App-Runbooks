@@ -9,19 +9,7 @@ param (
 		[string] $firstname,
 			
 	[Parameter(Mandatory=$true)]
-		[string] $lastname,
-			
-	[Parameter(Mandatory=$false)]
-		[string] $city,
-			
-	[Parameter(Mandatory=$false)]
-		[string] $office,
-
-	[Parameter(Mandatory=$false)]
-		[string] $mobilePhone,
-		
-	[Parameter(Mandatory=$false)]
-		[string] $officePhone
+		[string] $lastname
 )
 
 # * Environment variabels * #
@@ -63,10 +51,6 @@ try {
   	-Surname $lastname `
   	-ChangePasswordAtLogon:$False `
   	-Path $path  `
-    -City $city `
-  	-Office $office `
-  	-MobilePhone $mobilePhone `
-  	-OfficePhone $officePhone `
     -AccountPassword $userPassword `
 	-Enabled:$True `
 	-Server $domainController `
