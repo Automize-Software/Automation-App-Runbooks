@@ -12,8 +12,8 @@ param (
 )
 
 #Environment variables
-$CredentialName = 'GraphApiDelegatedUser' # Credentials to use. MFA for the credentials must be disabled
-$TenantID = "16cb613f-419e-4b3e-b37e-27c5a3c54bcf" # The Microsoft Tentant ID where Teams is enabled
+$CredentialName = "" # Credentials to use. MFA for the credentials must be disabled
+$TenantID = "" # The Microsoft Tentant ID where Teams is enabled
 
 #Script
 $ErrorActionPreference = "Stop"
