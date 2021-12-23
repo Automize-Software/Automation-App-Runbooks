@@ -143,6 +143,71 @@
             ]
         },
         {
+            "Name" : "Microsoft Azure Active Directory",
+            "Runbooks" : [
+                {
+                    "Name" : "New Group Member",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Active%20Directory/New-Group-Member.ps1"
+                },
+                {
+                    "Name" : "New Group",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Active%20Directory/New-Group.ps1"
+                },
+                {
+                    "Name" : "New User Lincense",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Active%20Directory/New-User-License.ps1"
+                },
+                {
+                    "Name" : "New User",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Active%20Directory/New-User.ps1"
+                },
+                {
+                    "Name" : "Remove Group Member",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Active%20Directory/Remove-Group-Member.ps1"
+                },
+                {
+                    "Name" : "Remove Group",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Active%20Directory/Remove-Group.ps1"
+                },
+                {
+                    "Name" : "Remove User License",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Active%20Directory/Remove-User-License.ps1"
+                },
+                {
+                    "Name" : "Remove User",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Active%20Directory/Remove-User.ps1"
+                },
+                {
+                    "Name" : "Set User Password",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Active%20Directory/Set-User-Password.ps1"
+                },
+                {
+                    "Name" : "Set User Usage Location",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Active%20Directory/Set-User-Usage-Location.ps1"
+                }
+            ]
+        },
+        {
             "Name" : "Microsoft Azure Compute",
             "Runbooks" : [
                 {
