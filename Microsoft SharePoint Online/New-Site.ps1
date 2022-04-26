@@ -52,7 +52,7 @@ try {
 
   Connect-PnPOnline -Url $sharePointUrl -ClientId $clientId -Tenant $tenant -CertificateBase64Encoded $encodedPfx -CertificatePassword $certificatePW 
 
-  $newsite = New-PnPSite -Type CommunicationSite -Title "TEST" -Url $teamSiteUrl -Lcid 1033 -Owner $owner -Wait
+  $newsite = New-PnPSite -Type CommunicationSite -Title $siteTitle -Url $teamSiteUrl -Lcid 1033 -Owner $owner -Wait
 
   Write-Verbose "New site successfully created at $newsite"
 
