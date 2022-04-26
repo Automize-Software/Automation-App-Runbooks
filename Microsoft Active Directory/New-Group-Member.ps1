@@ -37,7 +37,7 @@ try {
       throw "The user does not exist"   
   }
 
-  $group = Get-ADGroup -Identity $groupName -ErrorAction SilentlyContinue
+  $group = Get-ADGroup -Credential $credentials -Server $domainController -Filter "Name -eq '$groupName'" -ErrorAction SilentlyContinue
   if(!$group) {
     throw "The group does not exist or was not found"   
   }
