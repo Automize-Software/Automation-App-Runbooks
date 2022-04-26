@@ -339,6 +339,12 @@
         {
             "Name" : "Microsoft Sharepoint Online",
             "Runbooks" : [
+                {
+                    "Name" : "New Site",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20SharePoint%20Online/New-Site.ps1"
+                }
             ]
         },
         {
