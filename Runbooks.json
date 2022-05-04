@@ -260,6 +260,17 @@
             ]
         },
         {
+            "Name" : "Microsoft Azure Resource",
+            "Runbooks" : [
+                {
+                    "Name" : "Import Resources",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20Resource/Import-Resources.ps1"
+                }
+            ]
+        },
+        {
             "Name" : "Microsoft Endpoint Manager",
             "Runbooks" : [
                 {
