@@ -18,8 +18,6 @@ try{
 	$workItemStateObj = $workItem.resource.fields | Select-Object -ExpandProperty System.State
 	$state = $workItemStateObj.newValue
 	$correlationId = $workItem.resource._links.parent.href
-	Write-Output $state
-	Write-Output $correlationId
 
 	if($state -eq "Done") { # If state is "Done" we will mark the Incident as Resolved in ServiceNow
 		$ServiceNowCredential = Get-AutomationPSCredential -Name $serviceNowCredentialName
