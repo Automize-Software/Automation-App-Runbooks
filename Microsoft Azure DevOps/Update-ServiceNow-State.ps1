@@ -9,7 +9,7 @@ param (
 # * Environment variabels * #
 # Set the below to match your environment #
 $ServiceNowInstanceName = "" #Name of the ServiceNow instance that should be updated
-$serviceNowCredentialName = "" #Name of Credentials to authenticate with ServiceNow with
+$ServiceNowCredentialName = "" #Name of Credentials to authenticate with ServiceNow with
 $ServiceNowTable = "" #Name of ServiceNow table to update. Ex: incident
 
 ### Script ###
@@ -20,7 +20,7 @@ try{
 	$correlationId = $workItem.resource._links.parent.href
 
 	if($state -eq "Done") { # If state is "Done" we will mark the Incident as Resolved in ServiceNow
-		$ServiceNowCredential = Get-AutomationPSCredential -Name $serviceNowCredentialName
+		$ServiceNowCredential = Get-AutomationPSCredential -Name $ServiceNowCredentialName
 		$ServiceNowAuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ServiceNowCredential.UserName, $ServiceNowCredential.GetNetworkCredential().Password)))
 		$ServiceNowHeaders = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
 		$ServiceNowHeaders.Add('Authorization',('Basic {0}' -f $ServiceNowAuthInfo))
