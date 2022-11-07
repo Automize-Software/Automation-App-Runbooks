@@ -256,6 +256,12 @@
                     "RunbookType" : "PowerShell",
                     "Description" : "",
                     "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20DevOps/New-Task.ps1"
+                },
+                {
+                    "Name" : "Update ServiceNow State",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20DevOps/Update-ServiceNow-State.ps1"
                 }
             ]
         },
