@@ -1,0 +1,61 @@
+param (
+    [Parameter(Mandatory=$true)]
+    [int] $workItemId,
+    
+    [Parameter(Mandatory=$true)]
+    [string] $description,
+    
+    [Parameter(Mandatory=$true)]
+    [string] $state
+)
+
+# * Environment variabels * #
+# Set the below to match your environment #
+$tokenName = "" # Name of variable containing personal access token
+$organizationName = "" # Name of organization. Ex. automizedk
+$projectName = "" # Name of project to add work-item to.
+if($state -eq "Open") { # This block is used for state mappings used for setting the state of the Work Item based on the ServiceNow state
+  $state = "To Do"
+} elseif($state -eq "Work in Progress") {
+  $state = "Doing"
+} elseif($state -eq "Closed complete") {
+  $state = "Done"
+}
+
+# Script
+try {
+  $pacToken = Get-AutomationVariable -Name $tokenName
+  $adoHeader = @{
+    'Authorization' = ("Basic {0}" -f [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f "",$pacToken))))
+    'Accept' = 'application/json'
+    'Content-Type' = 'application/json-patch+json'
+  }
+  $adoTaskUri = "https://dev.azure.com/$organizationName/$projectName/_apis/wit/workitems/$($workItemId)?api-version=6.0"
+  Write-Verbose $adoTaskUri
+  
+  $ADOInput = @()
+
+  [hashtable]$descObj = @{}
+  $descObj.op = "add"
+  $descObj.path = "/fields/System.Description"
+  $descObj.value = "$description"
+  $ADOInput += $descObj
+
+  [hashtable]$stateObj = @{}
+  $stateObj.op = "add"
+  $stateObj.path = "/fields/System.State"
+  $stateObj.value = $state
+  $ADOInput += $stateObj
+  
+  $json = $ADOInput | ConvertTo-Json -Depth 6
+  $json = $json -replace '[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g', ''
+  Write-Verbose $json
+
+  $task = Invoke-RestMethod -Uri $adoTaskUri -Body $json -headers $adoHeader -Method "PATCH"
+} catch {
+    Write-Error -Message $_.Exception
+    throw $_.Exception
+} finally {
+    Write-Output $task | ConvertTo-Json -Depth 6
+    Write-Output $task.fields | ConvertTo-Json -Depth 6
+}
