@@ -1,6 +1,6 @@
 param (
     [Parameter(Mandatory=$true)]
-    [int] $workItemId,
+    [int] $workItemURL,
     
     [Parameter(Mandatory=$true)]
     [string] $comment,
@@ -12,8 +12,6 @@ param (
 # * Environment variabels * #
 # Set the below to match your environment #
 $tokenName = "" # Name of variable containing personal access token
-$organizationName = "" # Name of organization. Ex. automizedk
-$projectName = "" # Name of project to add work-item to.
 
 # Script
 try {
@@ -23,7 +21,7 @@ try {
     'Accept' = 'application/json'
     'Content-Type' = 'application/json'
   }
-  $adoTaskUri = "https://dev.azure.com/$organizationName/$projectName/_apis/wit/workitems/$workItemId/comments?api-version=6.0-preview.3"
+  $adoTaskUri = "$workItemURL/comments?api-version=6.0-preview.3"
   Write-Verbose $adoTaskUri
 
   $ADOInput = @()
