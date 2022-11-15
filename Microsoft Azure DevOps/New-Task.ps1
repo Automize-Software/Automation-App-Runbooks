@@ -49,6 +49,9 @@ try {
   $descObj.value = "Opened by: $requester<br>Description: $description"
   $ADOInput += $descObj
 
+  if($priority -gt 4){
+    $priority = 4
+  }
   [hashtable]$priorityObj = @{}
   $priorityObj.op = "add"
   $priorityObj.path = "/fields/Microsoft.VSTS.Common.Priority"
