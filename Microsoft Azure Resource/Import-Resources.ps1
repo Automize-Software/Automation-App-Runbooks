@@ -1,5 +1,6 @@
 <#
   This runbook will read all resources that can be accessed with the client id provided.
+  All available data from the resource providers will be imported and Virtual Machines will be enriched with their vm size.
   The data will be pushed to the ServiceNow instance provided in the input. 
   A local ServiceNow user that can write to an import set table must be provided.
   The import set table must include the following fields
@@ -72,7 +73,17 @@ try {
       $providers += $req.value
   }
   foreach($subscription in $subscriptions) {
-      $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)/resourcegroups?api-version=2018-05-01" -Headers $headers
+      # Get Virtual Machine Sizes
+      $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)/providers/Microsoft.Compute/locations/eastus/vmSizes?api-version=2022-08-01" -Headers $headers
+      $vmSizes = @()
+      $vmSizes += $req.value
+      while($null -ne $req.'@odata.nextLink') {
+          $uri = $req.'@odata.nextLink' 
+          $req = Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -Verbose
+          $vmSizes += $req.value
+      }
+    
+      $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)/resourcegroups?api-version=2021-04-01" -Headers $headers
       $resourceGroups = @()
       $resourceGroups += $req.value
       while ($null -ne $req.'@odata.nextLink') {
@@ -81,6 +92,32 @@ try {
           $resourceGroups += $req.value
       }
       foreach($resourceGroup in $resourceGroups) {
+          $resourceTypeArray = $resourceGroup.type.Split("/",2)
+          $body = @{}
+          $properties = $resourceGroup.properties | ConvertTo-Json -Depth 32 -Compress
+          $body.Add("location", $resourceGroup.location)
+          $body.Add("name", $resourceGroup.name)
+          $body.Add("namespace", $resourceTypeArray[0])
+          if($properties.Length -lt 4096) {
+              $body.Add("properties", $properties) 
+          } else {
+              $body.Add("properties", "")
+          }
+          $body.Add("resource_group", $resourceGroup.name)
+          $body.Add("resource_id", $resourceGroup.id)
+          $body.Add("resource_type", $resourceGroup.type)
+          $body.Add("subscription_id", $subscription.subscriptionId)
+          $body.Add("subscription_name", $subscription.displayName)
+          $body.Add("sku", "")
+          if($resourceGroup.tags -ne ""){
+              $body.Add("tags", ($resourceGroup.tags | ConvertTo-Json -Depth 2 -Compress))
+          } else {
+              $body.Add("tags", "")
+          }
+          $json = $body | ConvertTo-Json -Depth 2 -Compress
+          $body = [System.Text.Encoding]::UTF8.GetBytes($json)
+          $req = Invoke-RestMethod -Headers $ServiceNowHeaders -Method 'POST' -Uri $ServiceNowURI -Body $body
+        
           $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($resourceGroup.id)/resources?api-version=2021-04-01" -Headers $headers
           $resources = @()
           $resources += $req.value
@@ -108,6 +145,12 @@ try {
                     }
                   }
                   $body = @{}
+                  if($resource.type -eq "Microsoft.Compute/virtualMachines") {
+                    $vmSize = $vmSizes | Where-Object "name" -eq $req.properties.hardwareProfile.vmSize
+                    if($null -ne $vmSize){
+                      $req.properties.hardwareProfile = $vmSize
+                    }
+                  }
                   $properties = $req.properties | ConvertTo-Json -Depth 32 -Compress
                   $body.Add("location", $resource.location)
                   $body.Add("name", $resource.name)
