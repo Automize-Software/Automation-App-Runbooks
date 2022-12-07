@@ -15,6 +15,7 @@
   subscription_name [string, 128]
   sku [string, 512]
   tags [string, 1024]
+  instance_view [string, 4096]
 #>
 
 param (
@@ -42,6 +43,7 @@ try {
   $secret = [System.Web.HttpUtility]::UrlEncode($secretValue)
   $ServiceNowCredential = Get-AutomationPSCredential -Name $serviceNowUserCredName
   $ServiceNowURI = "https://$ServiceNowInstance.service-now.com/api/now/import/$ServiceNowImportSet"
+  
   $ServiceNowAuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ServiceNowCredential.UserName, $ServiceNowCredential.GetNetworkCredential().Password)))
   $ServiceNowHeaders = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
   $ServiceNowHeaders.Add('Authorization',('Basic {0}' -f $ServiceNowAuthInfo))
@@ -133,11 +135,11 @@ try {
                   $resourceType = $provider.resourceTypes | Where-Object -Property "resourceType" -eq $resourceTypeArray[1]
                   try {
                       $uri = "https://management.azure.com$($resource.id.replace(' ','%20'))?api-version=$($resourceType.apiVersions[0])"
-                      $req = Invoke-RestMethod -Method "GET" -Uri $uri  -Headers $headers
+                      $req = Invoke-RestMethod -Method "GET" -Uri $uri -Headers $headers
                   } catch {
                     try {
                       $uri = "https://management.azure.com$($resource.id.replace(' ','%20'))?api-version=$($resourceType.apiVersions[1])"
-                      $req = Invoke-RestMethod -Method "GET" -Uri $uri  -Headers $headers
+                      $req = Invoke-RestMethod -Method "GET" -Uri $uri -Headers $headers
                     } catch {
                       Write-Warning "Could not get data from URI $uri"
                       $req = @{}
@@ -150,6 +152,9 @@ try {
                     if($null -ne $vmSize){
                       $req.properties.hardwareProfile = $vmSize
                     }
+                    $instanceURI = "https://management.azure.com$($resource.id.replace(' ','%20'))/instanceView?api-version=2022-08-01"
+                    $instanceView = Invoke-RestMethod  -Method "GET" -Uri $instanceURI -Headers $headers
+                    $body.Add("instance_view", ($instanceView | ConvertTo-Json -Depth 32 -Compress))
                   }
                   $properties = $req.properties | ConvertTo-Json -Depth 32 -Compress
                   $body.Add("location", $resource.location)
