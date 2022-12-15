@@ -75,7 +75,32 @@ try {
       $providers += $req.value
   }
   foreach($subscription in $subscriptions) {
-      # Get Virtual Machine Sizes
+      $subscription = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)?api-version=2020-01-01" -Headers $headers
+      $body = @{}
+      $body.Add("subscription_name", $subscription.displayName)
+      $body.Add("subscription_id", $subscription.subscriptionId)
+      $body.Add("resource_id", $subscription.id)
+      $body.Add("name", $subscription.displayName)
+      $body.Add("namespace", "Microsoft.Subscription")
+      $body.Add("resource_type", "Microsoft.Subscription/subscriptions")
+      $body.Add("sku", "")
+      $body.Add("instance_view","")
+      $body.Add("location","")
+      if($subscription.tags -ne ""){
+        $body.Add("tags", ($subscription.tags | ConvertTo-Json -Depth 2 -Compress))
+      } else {
+        $body.Add("tags", "")
+      }
+      $properties = @{}
+      $properties.Add("state", $subscription.state)
+      $properties.Add("subscriptionPolicies", $subscription.subscriptionPolicies)
+      $properties.Add("authorizationSource", $subscription.authorizationSource)
+      $properties.Add("managedByTenants", $subscription.managedByTenants)
+      $body.Add("properties", ($properties | ConvertTo-Json -Depth 16 -Compress))
+      $json = $body | ConvertTo-Json -Depth 2 -Compress
+      $body = [System.Text.Encoding]::UTF8.GetBytes($json)
+      $req = Invoke-RestMethod -Headers $ServiceNowHeaders -Method 'POST' -Uri $ServiceNowURI -Body $body
+
       $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)/providers/Microsoft.Compute/locations/eastus/vmSizes?api-version=2022-08-01" -Headers $headers
       $vmSizes = @()
       $vmSizes += $req.value
