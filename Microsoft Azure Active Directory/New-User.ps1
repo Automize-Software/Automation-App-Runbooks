@@ -11,8 +11,9 @@ param (
  
 # * Environment variabels * #
 # Set the below to match your environment #
-$CredentialName = "" # Credentials to use. MFA for the credentials must be disabled
-$TenantID = "" # The Microsoft Tentant ID
+$CertificateName = "" # Name of certificate to use for authentication
+$ClientIDVariableName = "" # Name of variable containing the client ID to use to Authenticate with Azure
+$TenantVariableName = "" # Variable containing your Microsoft Tentant ID
  
 ### Script ###
 try {
@@ -22,9 +23,35 @@ try {
         throw "Could not find AzureAD module. Please install this module"
     }
 
-    $credentials = Get-AutomationPSCredential -Name $CredentialName
-    Connect-AzureAD -TenantId $TenantID -Credential $credentials | Out-Null
+    if (Get-Module -ListAvailable -Name "Az.Accounts") {
+        Write-Verbose "Found Az.Accounts module"
+    } else {
+        throw "Could not find Az.Accounts module. Please install this module"
+    }
 
+    if (Get-Module -ListAvailable -Name "Az.Resources") {
+        Write-Verbose "Found Az.Resources module"
+    } else {
+        throw "Could not find Az.Resources module. Please install this module"
+    }
+
+    if (Get-Module -ListAvailable -Name "Az.Automation") {
+        Write-Verbose "Found Az.Automation module"
+    } else {
+        throw "Could not find Az.Automation module. Please install this module"
+    }
+
+    Import-Module Az.Accounts
+    Import-Module Az.Resources
+    Import-Module Az.Automation
+    Import-Module AzureAD
+
+    $cert = Get-AutomationCertificate -Name $CertificateName
+    $appId = Get-AutomationVariable -Name $ClientIDVariableName
+    $tenantId = Get-AutomationVariable -Name $TenantVariableName
+    
+    $aadConnect = Connect-AzureAD -TenantId $tenantId -ApplicationId $appId -CertificateThumbprint $cert.Thumbprint -ErrorAction Stop
+   
     $user = Get-AzureADUser -Filter "userPrincipalName eq '$userName'"
     if($user) {
         throw "Cannot create user. The user '$userName' already exists"
