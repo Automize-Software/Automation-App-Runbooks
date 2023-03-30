@@ -49,9 +49,7 @@ function getAzureAuthHeaders {
   }
   return $headers
 }
-try {
-  Write-Output "davs"
-  
+try { 
   $metadata = @{
     startTime = Get-Date
     serviceNowInstance = $ServiceNowInstance
