@@ -32,11 +32,32 @@ $serviceNowUserCredName = ""  # Provide the name of the credentials that you wis
 $ServiceNowImportSet = "" # Provide the name of the import set table in ServiceNow to push the data to
 
 ### Script ###
+function getAzureAuthHeaders {
+  $headers = @{
+    'Content-Type' = "application/x-www-form-urlencoded"
+  }
+  $body = "grant_type=client_credentials&client_id=$app&client_secret=$secret&scope=https://management.azure.com/.default"
+  $now = [int](Get-Date -UFormat %s -Millisecond 0)
+  if($global:tokenExpires -lt $now + 60){
+    $token = Invoke-RestMethod -Method "POST" -Uri "https://login.microsoftonline.com/$tentant/oauth2/v2.0/token" -Headers $headers -Body $body
+    Set-Variable -Name 'token' -Value $token -Scope Global 
+    Set-Variable -Name 'tokenExpires' -Value ($now  + $token.expires_in) -Scope Global
+  } 
+  $headers = @{
+    'Authorization' = "$($global:token.token_type) $($global:token.access_token)"
+    'Content-Type' = "application/json"
+  }
+  return $headers
+}
 try {
+  Write-Output "davs"
+  
   $metadata = @{
     startTime = Get-Date
     serviceNowInstance = $ServiceNowInstance
   }
+  $global:tokenExpires = 0
+  $global:token = $null
   $tentant = Get-AutomationVariable -Name $tenantVariableName
   $app = Get-AutomationVariable -Name $appVariableName
   $secretValue = Get-AutomationVariable -Name $appSecretVariableName
@@ -49,33 +70,26 @@ try {
   $ServiceNowHeaders.Add('Authorization',('Basic {0}' -f $ServiceNowAuthInfo))
   $ServiceNowHeaders.Add('Accept','application/json')
   $ServiceNowHeaders.Add('Content-Type','application/json; charset=utf-8')
-  $headers = @{
-      'Content-Type' = "application/x-www-form-urlencoded"
-  }
-  $body = "grant_type=client_credentials&client_id=$app&client_secret=$secret&resource=https://management.azure.com/"
-  $token = Invoke-RestMethod -Method "POST" -Uri "https://login.microsoftonline.com/$tentant/oauth2/token" -Headers $headers -Body $body
-  $headers = @{
-      'Authorization' = "$($token.token_type) $($token.access_token)"
-      'Content-Type' = "application/json"
-  }
-  $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com/subscriptions?api-version=2016-06-01" -Headers $headers
+
+  $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com/subscriptions?api-version=2016-06-01" -Headers $(getAzureAuthHeaders)
   $subscriptions = @()
   $subscriptions += $req.value
   while ($null -ne $req.'@odata.nextLink') {
       $uri = $req.'@odata.nextLink' 
-      $req = Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -Verbose
+      $req = Invoke-RestMethod -Method Get -Uri $uri -Headers $(getAzureAuthHeaders) -Verbose
       $subscriptions += $req.value
   }
-  $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)/providers?api-version=2018-05-01" -Headers $headers
+  $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)/providers?api-version=2018-05-01" -Headers $(getAzureAuthHeaders)
   $providers = @()
   $providers += $req.value
   while ($null -ne $req.'@odata.nextLink') {
       $uri = $req.'@odata.nextLink' 
-      $req = Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -Verbose
+      $req = Invoke-RestMethod -Method "GET" -Uri $uri -Headers $(getAzureAuthHeaders) -Verbose
       $providers += $req.value
   }
+  
   foreach($subscription in $subscriptions) {
-      $subscription = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)?api-version=2020-01-01" -Headers $headers
+      $subscription = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)?api-version=2020-01-01" -Headers $(getAzureAuthHeaders)
       $body = @{}
       $body.Add("subscription_name", $subscription.displayName)
       $body.Add("subscription_id", $subscription.subscriptionId)
@@ -100,22 +114,22 @@ try {
       $json = $body | ConvertTo-Json -Depth 2 -Compress
       $body = [System.Text.Encoding]::UTF8.GetBytes($json)
       $req = Invoke-RestMethod -Headers $ServiceNowHeaders -Method 'POST' -Uri $ServiceNowURI -Body $body
-
-      $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)/providers/Microsoft.Compute/locations/eastus/vmSizes?api-version=2022-08-01" -Headers $headers
+      
+      $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)/providers/Microsoft.Compute/locations/eastus/vmSizes?api-version=2022-08-01" -Headers $(getAzureAuthHeaders)
       $vmSizes = @()
       $vmSizes += $req.value
       while($null -ne $req.'@odata.nextLink') {
           $uri = $req.'@odata.nextLink' 
-          $req = Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -Verbose
+          $req = Invoke-RestMethod -Method Get -Uri $uri -Headers $(getAzureAuthHeaders) -Verbose
           $vmSizes += $req.value
       }
     
-      $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)/resourcegroups?api-version=2021-04-01" -Headers $headers
+      $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($subscription.id)/resourcegroups?api-version=2021-04-01" -Headers $(getAzureAuthHeaders)
       $resourceGroups = @()
       $resourceGroups += $req.value
       while ($null -ne $req.'@odata.nextLink') {
           $uri = $req.'@odata.nextLink' 
-          $req = Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -Verbose
+          $req = Invoke-RestMethod -Method Get -Uri $uri -Headers $(getAzureAuthHeaders) -Verbose
           $resourceGroups += $req.value
       }
       foreach($resourceGroup in $resourceGroups) {
@@ -145,12 +159,12 @@ try {
           $body = [System.Text.Encoding]::UTF8.GetBytes($json)
           $req = Invoke-RestMethod -Headers $ServiceNowHeaders -Method 'POST' -Uri $ServiceNowURI -Body $body
         
-          $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($resourceGroup.id)/resources?api-version=2021-04-01" -Headers $headers
+          $req = Invoke-RestMethod -Method "GET" -Uri "https://management.azure.com$($resourceGroup.id)/resources?api-version=2021-04-01" -Headers $(getAzureAuthHeaders)
           $resources = @()
           $resources += $req.value
           while ($null -ne $req.'@odata.nextLink') {
               $uri = $req.'@odata.nextLink' 
-              $req = Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -Verbose
+              $req = Invoke-RestMethod -Method Get -Uri $uri -Headers $(getAzureAuthHeaders) -Verbose
               $resources += $req.value
           }
           foreach($resource in $resources) {
@@ -160,11 +174,11 @@ try {
                   $resourceType = $provider.resourceTypes | Where-Object -Property "resourceType" -eq $resourceTypeArray[1]
                   try {
                       $uri = "https://management.azure.com$($resource.id.replace(' ','%20'))?api-version=$($resourceType.apiVersions[0])"
-                      $req = Invoke-RestMethod -Method "GET" -Uri $uri -Headers $headers
+                      $req = Invoke-RestMethod -Method "GET" -Uri $uri -Headers $(getAzureAuthHeaders)
                   } catch {
                     try {
                       $uri = "https://management.azure.com$($resource.id.replace(' ','%20'))?api-version=$($resourceType.apiVersions[1])"
-                      $req = Invoke-RestMethod -Method "GET" -Uri $uri -Headers $headers
+                      $req = Invoke-RestMethod -Method "GET" -Uri $uri -Headers $(getAzureAuthHeaders)
                     } catch {
                       Write-Warning "Could not get data from URI $uri"
                       $req = @{}
@@ -178,7 +192,7 @@ try {
                       $req.properties.hardwareProfile = $vmSize
                     }
                     $instanceURI = "https://management.azure.com$($resource.id.replace(' ','%20'))/instanceView?api-version=2022-08-01"
-                    $instanceView = Invoke-RestMethod  -Method "GET" -Uri $instanceURI -Headers $headers
+                    $instanceView = Invoke-RestMethod  -Method "GET" -Uri $instanceURI -Headers $(getAzureAuthHeaders)
                     $body.Add("instance_view", ($instanceView | ConvertTo-Json -Depth 32 -Compress))
                   }
                   $properties = $req.properties | ConvertTo-Json -Depth 32 -Compress
@@ -211,7 +225,7 @@ try {
               }
           }
       }
-  }
+  }#>
 } catch {
   Write-Error ("Exception caught at line $($_.InvocationInfo.ScriptLineNumber), $($_.Exception.Message)")
   throw
