@@ -35,6 +35,17 @@
             ]
         },
         {
+            "Name" : "ChatGPT",
+            "Runbooks" : [
+                {
+                    "Name" : "New Completion",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/ChatGPT/New-Completion.ps1"
+                }
+            ]
+        },
+        {
             "Name" : "Cisco Unified Computing System",
             "Runbooks" : [
             ]
