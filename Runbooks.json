@@ -279,6 +279,12 @@
                     "RunbookType" : "PowerShell",
                     "Description" : "",
                     "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20DevOps/Update-Task.ps1"
+                },
+                {
+                    "Name" : "Start Pipeline",
+                    "RunbookType" : "PowerShell",
+                    "Description" : "",
+                    "URL" : "https://raw.githubusercontent.com/Automize-Software/AzureRunbooks/main/Microsoft%20Azure%20DevOps/Start-Pipeline.ps1"
                 }
             ]
         },
