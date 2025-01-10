@@ -11,7 +11,7 @@ Param(
     [Parameter(Mandatory = $true)]
     [string]$BranchName,
 
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory = $false)]
     [hashtable]$Parameters
 )
 
@@ -90,7 +90,7 @@ Begin {
             [Parameter(Mandatory = $true)]
             [string]$BranchName,
     
-            [Parameter(Mandatory = $true)]
+            [Parameter(Mandatory = $false)]
             [hashtable]$Parameters,
     
             [Parameter(Mandatory = $true)]
@@ -138,12 +138,17 @@ Begin {
     }
 }
 Process {
+    
+    # * Environment variabels * #
+    # Set the below to match your environment #
+    $AutomationVariableName = "DevOpsToken"
+    
     $ErrorActionPreference = "Stop"
     try {
-
+        
         # Get DevOps Header
-        $Credential = Get-AutomationPSCredential -Name 'DevOpsToken'
-        $Header = Get-DevOpsHeader -PAT $Credential.GetNetworkCredential().Password
+        $Variable = Get-AutomationVariable -Name $AutomationVariableName
+        $Header = Get-DevOpsHeader -PAT $Variable
 
         # Start Pipeline
         $StartPipelineRun = Start-Pipeline -Organization $Organization -Project $Project -PipelineId $PipelineId -BranchName $BranchName -Parameters $Parameters -Headers $Header
