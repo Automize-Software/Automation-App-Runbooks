@@ -76,7 +76,7 @@ Begin {
         }
         
     }
-    function Start-PipelineRun {
+    function Start-Pipeline {
         param (
             [Parameter(Mandatory = $true)]
             [string]$Organization,
