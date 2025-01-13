@@ -15,152 +15,147 @@ Param(
     [hashtable]$Parameters
 )
 
-Begin {
-    function Get-DevOpsHeader {
-        param (
-            [Parameter(Mandatory = $true)]
-            [string]$PAT
-        )
-    
-        Process {
+function Get-DevOpsHeader {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$PAT
+    )
+
+    Process {
+        $ErrorActionPreference = "Stop"
+        try {
+            $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($PAT)"))
+            $Header = @{Authorization = ("Basic {0}" -f $base64AuthInfo) }
+        }
+        catch {
+            throw $_
+        }
+    }
+    End {
+        Write-Output $Header
+    }
+}
+function Get-PipelineRun {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$Organization,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Project,
+
+        [Parameter(Mandatory = $true)]
+        [string]$PipelineId,
+        
+        [Parameter(Mandatory = $true)]
+        [string]$RunId,
+
+        [Parameter(Mandatory = $true)]
+        [hashtable]$Headers
+    )
+
+    Process {
+        try {
             $ErrorActionPreference = "Stop"
-            try {
-                $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(":$($PAT)"))
-                $Header = @{Authorization = ("Basic {0}" -f $base64AuthInfo) }
+    
+            $Params = @{
+                Uri         = "https://dev.azure.com/$Organization/$Project/_apis/pipelines/$PipelineId/runs/$($RunId)?api-version=7.1"
+                Method      = "GET"
+                ContentType = "application/json"
+                Headers     = $Headers
             }
-            catch {
-                throw $_
-            }
+    
+            $Output = Invoke-RestMethod @Params
         }
-        End {
-            Write-Output $Header
+        catch {
+            throw $_
         }
     }
-    function Get-PipelineRun {
-        param (
-            [Parameter(Mandatory = $true)]
-            [string]$Organization,
-    
-            [Parameter(Mandatory = $true)]
-            [string]$Project,
-    
-            [Parameter(Mandatory = $true)]
-            [string]$PipelineId,
-            
-            [Parameter(Mandatory = $true)]
-            [string]$RunId,
-    
-            [Parameter(Mandatory = $true)]
-            [hashtable]$Headers
-        )
-    
-        Process {
-            try {
-                $ErrorActionPreference = "Stop"
-        
-                $Params = @{
-                    Uri         = "https://dev.azure.com/$Organization/$Project/_apis/pipelines/$PipelineId/runs/$($RunId)?api-version=7.1"
-                    Method      = "GET"
-                    ContentType = "application/json"
-                    Headers     = $Headers
-                }
-        
-                $Output = Invoke-RestMethod @Params
-            }
-            catch {
-                throw $_
-            }
-        }
-        End {
-            Write-Output $Output
-        }
-        
+    End {
+        Write-Output $Output
     }
-    function Start-Pipeline {
-        param (
-            [Parameter(Mandatory = $true)]
-            [string]$Organization,
     
-            [Parameter(Mandatory = $true)]
-            [string]$Project,
+}
+function Start-Pipeline {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$Organization,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Project,
+
+        [Parameter(Mandatory = $true)]
+        [string]$PipelineId,
+
+        [Parameter(Mandatory = $true)]
+        [string]$BranchName,
+
+        [Parameter(Mandatory = $false)]
+        [hashtable]$Parameters,
+
+        [Parameter(Mandatory = $true)]
+        [hashtable]$Headers
+    )
+
+    Process {
+        try {
+            $ErrorActionPreference = "Stop"
     
-            [Parameter(Mandatory = $true)]
-            [string]$PipelineId,
-    
-            [Parameter(Mandatory = $true)]
-            [string]$BranchName,
-    
-            [Parameter(Mandatory = $false)]
-            [hashtable]$Parameters,
-    
-            [Parameter(Mandatory = $true)]
-            [hashtable]$Headers
-        )
-    
-        Process {
-            try {
-                $ErrorActionPreference = "Stop"
-        
-                $Body = @{
-                    stagesToSkip = @{}
-                    resources    = @{
-                        repositories = @{
-                            self = @{
-                                refName = "refs/heads/$BranchName"
-                            }
+            $Body = @{
+                stagesToSkip = @{}
+                resources    = @{
+                    repositories = @{
+                        self = @{
+                            refName = "refs/heads/$BranchName"
                         }
                     }
-                    variables    = @{}
                 }
-    
-                if ($Parameters) {
-                    $Body.Add("templateParameters", $Parameters)
-                }
-                
-                $Params = @{
-                    Uri         = "https://dev.azure.com/$Organization/$Project/_apis/pipelines/$($PipelineId)/runs?api-version=7.1"
-                    Method      = "POST"
-                    ContentType = "application/json"
-                    Headers     = $Headers
-                    Body        = $Body | ConvertTo-Json -Depth 10
-                }
-        
-                $Output = Invoke-RestMethod @Params
-        
+                variables    = @{}
             }
-            catch {
-                throw ("Exception caught at line $($_.InvocationInfo.ScriptLineNumber) `n$($_.Exception.Message)")
-            }   
-        }
-        End {
-            Write-Output $Output
-        }
-    }
-}
-Process {
-    
-    # * Environment variabels * #
-    # Set the below to match your environment #
-    $AutomationVariableName = "DevOpsToken"
-    
-    $ErrorActionPreference = "Stop"
-    try {
-        
-        # Get DevOps Header
-        $Variable = Get-AutomationVariable -Name $AutomationVariableName
-        $Header = Get-DevOpsHeader -PAT $Variable
 
-        # Start Pipeline
-        $StartPipelineRun = Start-Pipeline -Organization $Organization -Project $Project -PipelineId $PipelineId -BranchName $BranchName -Parameters $Parameters -Headers $Header
-        while (!($PipelineRun.result -in @("succeeded", "failed"))) {
-            $PipelineRun = Get-PipelineRun -Organization $Organization -Project $Project -PipelineId $PipelineId -RunId $StartPipelineRun.id -Headers $Header
-            Start-Sleep -Seconds 2
+            if ($Parameters) {
+                $Body.Add("templateParameters", $Parameters)
+            }
+            
+            $Params = @{
+                Uri         = "https://dev.azure.com/$Organization/$Project/_apis/pipelines/$($PipelineId)/runs?api-version=7.1"
+                Method      = "POST"
+                ContentType = "application/json"
+                Headers     = $Headers
+                Body        = $Body | ConvertTo-Json -Depth 10
+            }
+    
+            $Output = Invoke-RestMethod @Params
+    
         }
+        catch {
+            throw ("Exception caught at line $($_.InvocationInfo.ScriptLineNumber) `n$($_.Exception.Message)")
+        }   
     }
-    catch {
-        throw ("Exception caught at line $($_.InvocationInfo.ScriptLineNumber) `n$($_.Exception.Message)")
+    End {
+        Write-Output $Output
     }
 }
-End {
-    Write-Output ($PipelineRun | ConvertTo-Json -Depth 10)
+
+# * Environment variabels * #
+# Set the below to match your environment #
+$AutomationVariableName = "DevOpsToken"
+
+$ErrorActionPreference = "Stop"
+try {
+    
+    # Get DevOps Header
+    $Variable = Get-AutomationVariable -Name $AutomationVariableName
+    $Header = Get-DevOpsHeader -PAT $Variable
+
+    # Start Pipeline
+    $StartPipelineRun = Start-Pipeline -Organization $Organization -Project $Project -PipelineId $PipelineId -BranchName $BranchName -Parameters $Parameters -Headers $Header
+    while (!($PipelineRun.result -in @("succeeded", "failed"))) {
+        $PipelineRun = Get-PipelineRun -Organization $Organization -Project $Project -PipelineId $PipelineId -RunId $StartPipelineRun.id -Headers $Header
+        Start-Sleep -Seconds 2
+    }
 }
+catch {
+    throw ("Exception caught at line $($_.InvocationInfo.ScriptLineNumber) `n$($_.Exception.Message)")
+}
+
+Write-Output ($PipelineRun | ConvertTo-Json -Depth 10)
